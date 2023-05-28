@@ -9,10 +9,10 @@ import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import SendIcon from "@mui/icons-material/Send";
 
 import axios from "axios";
-
-
+import useLLM from "usellm";
 
 const AudioBox = ({ fetchVideo }) => {
+  const llm = useLLM({ serviceUrl: "https://usellm.org/api/llm" });
   const [data, setData] = useState({
     model: "gpt-3.5-turbo",
     messages: [
@@ -24,7 +24,6 @@ const AudioBox = ({ fetchVideo }) => {
       { role: "assistant", content: "" },
     ],
   });
-
 
   const GPT_KEY = process.env.REACT_APP_GPT_API_KEY;
 
@@ -41,17 +40,19 @@ const AudioBox = ({ fetchVideo }) => {
     setData(newData);
     console.log("sending data", newData);
     try {
-      const response = await axios.post(
-        "https://api.openai.com/v1/chat/completions",
-        newData,
-        {
-          headers: {
-            Authorization: GPT_KEY,
-          },
-        }
-      );
-      console.log("response.data", response.data);
-      fetchVideo(response.data.choices[0].message.content);
+      // const response = await axios.post(
+      //   "https://api.openai.com/v1/chat/completions",
+      //   newData,
+      //   {
+      //     headers: {
+      //       Authorization: GPT_KEY,
+      //     },
+      //   }
+      // );
+      // console.log("response.data", response.data);
+      // fetchVideo(response.data.choices[0].message.content);
+      const { message } = await llm.chat({ messages: updatedMessages });
+      fetchVideo(message.content);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
