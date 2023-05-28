@@ -3,15 +3,17 @@
   position: relative;
 }
 
+
 .content{
   z-index: 10;
+  background-color: purple;
 }
 
-.particle{
-position: absolute;
-width: 100%;
-height: screen;
-z-index: 0;
+.particle {
+  position: relative;
+  width: 100%;
+  height: screen;
+  z-index: 0;
 }
 
 video{
@@ -19,3 +21,4 @@ video{
   border-radius: 50%;
   z-index: 10;
 }
+
