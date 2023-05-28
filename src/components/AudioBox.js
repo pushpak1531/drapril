@@ -7,19 +7,36 @@ import MicIcon from "@mui/icons-material/Mic";
 import MicOffIcon from "@mui/icons-material/MicOff";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import SendIcon from "@mui/icons-material/Send";
-import CharacterBox from "./CharactrerBox";
+
 import axios from "axios";
 
-const AudioBox = (props) => {
+
+
+const AudioBox = ({ fetchVideo }) => {
   const [data, setData] = useState({
     model: "gpt-3.5-turbo",
-    messages: [{ role: "system", content: "" }],
+    messages: [
+      {
+        role: "system",
+        content:
+          "Your name is Miss April. You are a elementary school teacher with many years of experience who loves children. You are a very cheerful and happy person who just loves to teach and maintains high levels of professionalism and dignity. All the questions asked to you are doubts that children have and therefore you need to explain these doubts in the simplest ways possible with the word limit of 30-40 words.  You will strictly answer only those question you are sure about and if you are unaware then simply beg their pardon and tell them that you will learn about it and come back to them later. All the information is to be kept child friendly. You will encourage the children to learn more in a gentle way.",
+      },
+      { role: "assistant", content: "" },
+    ],
   });
 
-  const [responseData, setResponseData] = useState();
+
+  const GPT_KEY = process.env.REACT_APP_GPT_API_KEY;
+
+  const { transcript, resetTranscript, browserSupportsSpeechRecognition } =
+    useSpeechRecognition();
 
   const fetchData = async () => {
-    const updatedMessages = [{ role: "system", content: transcript }];
+    if (!transcript) {
+      return;
+    }
+
+    const updatedMessages = [{ role: "assistant", content: transcript }];
     const newData = { ...data, messages: updatedMessages };
     setData(newData);
     console.log("sending data", newData);
@@ -29,26 +46,23 @@ const AudioBox = (props) => {
         newData,
         {
           headers: {
-            Authorization:
-              "",
+            Authorization: GPT_KEY,
           },
         }
       );
-      setResponseData(response.data);
+      console.log("response.data", response.data);
+      fetchVideo(response.data.choices[0].message.content);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
-
-  const { transcript, resetTranscript, browserSupportsSpeechRecognition } =
-    useSpeechRecognition();
 
   if (!browserSupportsSpeechRecognition) {
     return <span>Browser doesn't support speech recognition.</span>;
   }
 
   return (
-    <div>
+    <div style={{ padding: "5rem" }}>
       <ButtonGroup
         variant="contained"
         aria-label="outlined primary button group"
@@ -66,12 +80,6 @@ const AudioBox = (props) => {
           <SendIcon></SendIcon>
         </Button>
       </ButtonGroup>
-      <CharacterBox text={transcript} />
-      {responseData && (
-        <div>
-          <h3>Answer:{responseData.choices[0].message.content}</h3>
-        </div>
-      )}
     </div>
   );
 };

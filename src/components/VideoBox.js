@@ -1,11 +1,20 @@
-import React from "react"
+import React from "react";
+import "../App.css";
 
-const VideoBox = (props) => {
+const VideoBox = ({ videoData }) => {
+  console.log({ videoData });
   return (
-    <div>
-      <p>VideoBox</p>
+    <div style={{ padding: "1rem" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
+        {videoData && <video src={videoData.result_url} autoPlay />}
+      </div>
     </div>
-  )
+  );
 };
 
 export default VideoBox;
