@@ -1,11 +1,10 @@
 .App {
   text-align: center;
-  background-color: #282c34;
   position: relative;
 }
 
 .content{
-  background-color: purple;
+  z-index: 10;
 }
 
 .particle{
@@ -15,13 +14,8 @@ height: screen;
 z-index: 0;
 }
 
-.character-box {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 200px;
-  height: 100px;
-  border: 1px solid black;
-  background-color: #f2f2f2;
-  font-size: 18px;
+video{
+  display: block;
+  border-radius: 50%;
+  z-index: 10;
 }

@@ -7,14 +7,26 @@ import MicIcon from "@mui/icons-material/Mic";
 import MicOffIcon from "@mui/icons-material/MicOff";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import SendIcon from "@mui/icons-material/Send";
-import CharacterBox from "./CharactrerBox";
+
 import axios from "axios";
 
-const AudioBox = ({ setVideoInput }) => {
+
+
+const AudioBox = ({ fetchVideo }) => {
   const [data, setData] = useState({
     model: "gpt-3.5-turbo",
-    messages: [{ role: "system", content: "" }],
+    messages: [
+      {
+        role: "system",
+        content:
+          "Your name is Miss April. You are a elementary school teacher with many years of experience who loves children. You are a very cheerful and happy person who just loves to teach and maintains high levels of professionalism and dignity. All the questions asked to you are doubts that children have and therefore you need to explain these doubts in the simplest ways possible with the word limit of 30-40 words.  You will strictly answer only those question you are sure about and if you are unaware then simply beg their pardon and tell them that you will learn about it and come back to them later. All the information is to be kept child friendly. You will encourage the children to learn more in a gentle way.",
+      },
+      { role: "assistant", content: "" },
+    ],
   });
+
+
+  const GPT_KEY = process.env.REACT_APP_GPT_API_KEY;
 
   const { transcript, resetTranscript, browserSupportsSpeechRecognition } =
     useSpeechRecognition();
@@ -24,7 +36,7 @@ const AudioBox = ({ setVideoInput }) => {
       return;
     }
 
-    const updatedMessages = [{ role: "system", content: transcript }];
+    const updatedMessages = [{ role: "assistant", content: transcript }];
     const newData = { ...data, messages: updatedMessages };
     setData(newData);
     console.log("sending data", newData);
@@ -34,13 +46,12 @@ const AudioBox = ({ setVideoInput }) => {
         newData,
         {
           headers: {
-            Authorization:
-              "Bearer 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",
+            Authorization: GPT_KEY,
           },
         }
       );
       console.log("response.data", response.data);
-      setVideoInput(response.data.choices[0].message.content);
+      fetchVideo(response.data.choices[0].message.content);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -51,7 +62,7 @@ const AudioBox = ({ setVideoInput }) => {
   }
 
   return (
-    <div>
+    <div style={{ padding: "5rem" }}>
       <ButtonGroup
         variant="contained"
         aria-label="outlined primary button group"
@@ -69,7 +80,6 @@ const AudioBox = ({ setVideoInput }) => {
           <SendIcon></SendIcon>
         </Button>
       </ButtonGroup>
-      <CharacterBox text={transcript} />
     </div>
   );
 };
