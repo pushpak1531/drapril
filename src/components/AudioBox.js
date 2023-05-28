@@ -10,15 +10,20 @@ import SendIcon from "@mui/icons-material/Send";
 import CharacterBox from "./CharactrerBox";
 import axios from "axios";
 
-const AudioBox = (props) => {
+const AudioBox = ({ setVideoInput }) => {
   const [data, setData] = useState({
     model: "gpt-3.5-turbo",
     messages: [{ role: "system", content: "" }],
   });
 
-  const [responseData, setResponseData] = useState();
+  const { transcript, resetTranscript, browserSupportsSpeechRecognition } =
+    useSpeechRecognition();
 
   const fetchData = async () => {
+    if (!transcript) {
+      return;
+    }
+
     const updatedMessages = [{ role: "system", content: transcript }];
     const newData = { ...data, messages: updatedMessages };
     setData(newData);
@@ -30,18 +35,16 @@ const AudioBox = (props) => {
         {
           headers: {
             Authorization:
-              "",
+              "Bearer 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",
           },
         }
       );
-      setResponseData(response.data);
+      console.log("response.data", response.data);
+      setVideoInput(response.data.choices[0].message.content);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
-
-  const { transcript, resetTranscript, browserSupportsSpeechRecognition } =
-    useSpeechRecognition();
 
   if (!browserSupportsSpeechRecognition) {
     return <span>Browser doesn't support speech recognition.</span>;
@@ -67,11 +70,6 @@ const AudioBox = (props) => {
         </Button>
       </ButtonGroup>
       <CharacterBox text={transcript} />
-      {responseData && (
-        <div>
-          <h3>Answer:{responseData.choices[0].message.content}</h3>
-        </div>
-      )}
     </div>
   );
 };
