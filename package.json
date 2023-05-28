@@ -19,6 +19,7 @@
     "react-speech-recognition": "^3.10.0",
     "react-tsparticles": "^2.9.3",
     "tsparticles": "^2.9.3",
+    "usellm": "^0.7.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
