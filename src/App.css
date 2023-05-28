@@ -4,15 +4,15 @@
   position: relative;
 }
 
-.content{
+.content {
   background-color: purple;
 }
 
-.particle{
-position: absolute;
-width: 100%;
-height: screen;
-z-index: 0;
+.particle {
+  position: relative;
+  width: 100%;
+  height: screen;
+  z-index: 0;
 }
 
 .character-box {
@@ -24,4 +24,31 @@ z-index: 0;
   border: 1px solid black;
   background-color: #f2f2f2;
   font-size: 18px;
+}
+
+.box-container {
+  display: flex;
+  height: 300px;
+  width: 300px;
+}
+
+#video-wrapper {
+  height: 500px;
+  background-position: top;
+  z-index: 10;
+}
+
+#video-wrapper div {
+  width: 400px;
+  margin: 0 auto;
+  padding: 50px 0 0 0;
+  z-index: 10;
+}
+
+video {
+  display: block;
+  border: 1px solid;
+  border-radius: 50%;
+  background-color: #fff;
+  z-index: 10;
 }
